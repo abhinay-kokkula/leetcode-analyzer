@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>LeetCode Analyzer</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#0f172a,#1e293b,#111827);
+    color:white;
+}
+
+.container{
+    width:100%;
+    max-width:550px;
+    padding:20px;
+}
+
+.card{
+    background:rgba(255,255,255,0.08);
+    backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:24px;
+    padding:40px;
+    text-align:center;
+    box-shadow:0 20px 40px rgba(0,0,0,0.3);
+}
+
+.logo{
+    font-size:4rem;
+    margin-bottom:10px;
+}
+
+h1{
+    font-size:2.5rem;
+    margin-bottom:10px;
+    background:linear-gradient(to right,#38bdf8,#8b5cf6);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.subtitle{
+    color:#cbd5e1;
+    margin-bottom:30px;
+    line-height:1.6;
+}
+
+.input-group{
+    margin-bottom:20px;
+}
+
+input{
+    width:100%;
+    padding:16px;
+    border:none;
+    border-radius:12px;
+    background:rgba(255,255,255,0.08);
+    color:white;
+    font-size:16px;
+    outline:none;
+    border:1px solid rgba(255,255,255,0.1);
+}
+
+input:focus{
+    border:1px solid #8b5cf6;
+}
+
+input::placeholder{
+    color:#94a3b8;
+}
+
+button{
+    width:100%;
+    padding:16px;
+    border:none;
+    border-radius:12px;
+    cursor:pointer;
+    font-size:16px;
+    font-weight:600;
+    color:white;
+    background:linear-gradient(135deg,#3b82f6,#8b5cf6);
+    transition:.3s;
+}
+
+button:hover{
+    transform:translateY(-2px);
+    box-shadow:0 10px 25px rgba(59,130,246,.35);
+}
+
+.error{
+    margin-top:20px;
+    color:#f87171;
+    font-weight:600;
+}
+
+.features{
+    margin-top:30px;
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+}
+
+.feature{
+    background:rgba(255,255,255,0.05);
+    border-radius:12px;
+    padding:12px;
+    font-size:14px;
+    color:#cbd5e1;
+}
+
+.footer{
+    margin-top:25px;
+    color:#94a3b8;
+    font-size:13px;
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        <div class="logo">🚀</div>
+
+        <h1>LeetCode Analyzer</h1>
+
+        <p class="subtitle">
+            Analyze any LeetCode profile and view
+            performance metrics, contest rankings,
+            difficulty distribution and custom scoring.
+        </p>
+
+        <form action="/analyze" method="post">
+
+            <div class="input-group">
+
+                <input
+                    type="text"
+                    name="username"
+                    placeholder="Enter LeetCode Username"
+                    required>
+
+            </div>
+
+            <button type="submit">
+                Analyze Profile
+            </button>
+
+        </form>
+
+        <p class="error"
+           th:if="${error}"
+           th:text="${error}">
+        </p>
+
+        <div class="features">
+
+            <div class="feature">
+                📊 Performance Score
+            </div>
+
+            <div class="feature">
+                🏆 Contest Rating
+            </div>
+
+            <div class="feature">
+                📈 Problem Distribution
+            </div>
+
+            <div class="feature">
+                ⚡ Real-Time Analysis
+            </div>
+
+        </div>
+
+        <div class="footer">
+            Made with love java
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>LeetCode Analyzer</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:linear-gradient(135deg,#0f172a,#1e293b,#111827);
+    color:white;
+    padding:30px;
+}
+
+.container{
+    max-width:1300px;
+    margin:auto;
+}
+
+.header{
+    text-align:center;
+    margin-bottom:35px;
+}
+
+.header h1{
+    font-size:3rem;
+    background:linear-gradient(to right,#38bdf8,#8b5cf6);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.username{
+    margin-top:10px;
+    color:#cbd5e1;
+    font-size:1.2rem;
+}
+
+/* Dashboard Layout */
+
+.dashboard{
+    display:grid;
+    grid-template-columns:2.5fr 1fr;
+    gap:25px;
+}
+
+/* LEFT SIDE */
+
+.left-panel{
+    display:flex;
+    flex-direction:column;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+}
+
+.card{
+    background:rgba(255,255,255,0.08);
+    backdrop-filter:blur(15px);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:16px;
+    padding:18px;
+    transition:.3s;
+    overflow:hidden;
+    position:relative;
+}
+.card::before{
+    content:'';
+    position:absolute;
+    top:0;
+    left:-100%;
+    width:100%;
+    height:100%;
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,.08),
+            transparent
+        );
+    transition:.8s;
+}
+
+.card:hover::before{
+    left:100%;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 10px 25px rgba(0,0,0,.3);
+}
+
+
+.card h3{
+    font-size:14px;
+    color:#94a3b8;
+    margin-bottom:10px;
+}
+
+.card p{
+    font-size:28px;
+    font-weight:bold;
+}
+
+/* RIGHT SIDE */
+
+.right-panel{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+
+.distribution-card,
+.score-card{
+    background:rgba(255,255,255,0.08);
+    backdrop-filter:blur(15px);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:18px;
+    padding:20px;
+}
+
+.section-title{
+    margin-bottom:20px;
+    font-size:1.2rem;
+}
+
+/* Progress Bars */
+
+.label{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:6px;
+    font-size:14px;
+}
+
+.bar{
+    width:100%;
+    height:16px;
+    background:#1f2937;
+    border-radius:20px;
+    overflow:hidden;
+    margin-bottom:18px;
+}
+
+.easy-bar{
+    height:100%;
+    background:linear-gradient(90deg,#22c55e,#16a34a);
+}
+
+.medium-bar{
+    height:100%;
+    background:linear-gradient(90deg,#facc15,#eab308);
+}
+
+.hard-bar{
+    height:100%;
+    background:linear-gradient(90deg,#ef4444,#dc2626);
+}
+
+/* Performance Score */
+
+.score-card{
+    text-align:center;
+    background:linear-gradient(135deg,#6366f1,#8b5cf6);
+}
+
+.score{
+    font-size:3rem;
+    font-weight:bold;
+}
+
+.level{
+    margin-top:10px;
+    font-size:1.1rem;
+}
+
+/* Button */
+
+.back-btn{
+    display:block;
+    width:250px;
+    margin:40px auto 0 auto;
+    text-align:center;
+    text-decoration:none;
+    color:white;
+    padding:14px 20px;
+    border-radius:12px;
+    background:linear-gradient(135deg,#3b82f6,#8b5cf6);
+    transition:.3s;
+}
+
+.back-btn:hover{
+    transform:scale(1.05);
+}
+
+/* Mobile */
+
+@media(max-width:1000px){
+
+    .dashboard{
+        grid-template-columns:1fr;
+    }
+
+    .cards{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:600px){
+
+    .cards{
+        grid-template-columns:1fr;
+    }
+}
+
+</style>
+</head>
+<script>
+
+function animateCounter(id){
+
+    const element = document.getElementById(id);
+
+    if(!element) return;
+
+    const target = parseInt(
+        element.textContent.replace(/,/g,'')
+    );
+
+    let current = 0;
+
+    const increment = Math.max(
+        1,
+        Math.ceil(target / 80)
+    );
+
+    element.textContent = "0";
+
+    const timer = setInterval(() => {
+
+        current += increment;
+
+        if(current >= target){
+            current = target;
+            clearInterval(timer);
+        }
+
+        element.textContent =
+            current.toLocaleString();
+
+    },15);
+
+}
+
+window.onload = () => {
+
+    animateCounter("totalSolved");
+    animateCounter("easySolved");
+    animateCounter("mediumSolved");
+    animateCounter("hardSolved");
+    animateCounter("contestRating");
+    animateCounter("contestRanking");
+    animateCounter("performanceScore");
+    animateCounter("globalRating");
+
+};
+
+</script>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>LeetCode Analyzer</h1>
+
+        <div class="username"
+             th:text="${profile.username}">
+        </div>
+    </div>
+
+    <div class="dashboard">
+
+        <!-- LEFT -->
+
+        <div class="left-panel">
+
+            <div class="cards">
+
+                <div class="card">
+                    <h3>Total Solved</h3>
+                    <p id="totalSolved" th:text="${profile.totalSolved}"></p>
+                </div>
+
+                <div class="card">
+                    <h3>Easy Solved</h3>
+                    <p id="easySolved" th:text="${profile.easySolved}"></p>
+                </div>
+
+                <div class="card">
+                    <h3>Medium Solved</h3>
+                    <p id="mediumSolved" th:text="${profile.mediumSolved}"></p>
+                </div>
+
+                <div class="card">
+                    <h3>Hard Solved</h3>
+                    <p id="hardSolved" th:text="${profile.hardSolved}"></p>
+                </div>
+
+                <div class="card">
+                    <h3>Contest Rating</h3>
+                    <p id="contestRating" th:text="${profile.contestRating}"></p>
+                </div>
+
+                <div class="card">
+                    <h3>Contest Ranking</h3>
+                    <p id="globalRating" th:text="${profile.globalRanking}"></p>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- RIGHT -->
+
+        <div class="right-panel">
+
+            <div class="distribution-card">
+
+                <h2 class="section-title">
+                    Problem Distribution
+                </h2>
+
+                <div class="label">
+                    <span>Easy</span>
+                    <span th:text="${profile.easySolved}"></span>
+                </div>
+
+                <div class="bar">
+                    <div class="easy-bar"
+                         th:style="'width:' + ${profile.easySolved * 100 / profile.totalSolved} + '%'">
+                    </div>
+                </div>
+
+                <div class="label">
+                    <span>Medium</span>
+                    <span th:text="${profile.mediumSolved}"></span>
+                </div>
+
+                <div class="bar">
+                    <div class="medium-bar"
+                         th:style="'width:' + ${profile.mediumSolved * 100 / profile.totalSolved} + '%'">
+                    </div>
+                </div>
+
+                <div class="label">
+                    <span>Hard</span>
+                    <span th:text="${profile.hardSolved}"></span>
+                </div>
+
+                <div class="bar">
+                    <div class="hard-bar"
+                         th:style="'width:' + ${profile.hardSolved * 100 / profile.totalSolved} + '%'">
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="score-card">
+
+                <h2>Performance Score</h2>
+
+                <div class="score" id="performanceScore"
+                     th:text="${profile.performanceScore}">
+                </div>
+
+                <div class="level"
+                     th:text="${profile.profileLevel}">
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <a href="/" class="back-btn">
+        Analyze Another User
+    </a>
+
+</div>
+
+</body>
+</html>
