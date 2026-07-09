@@ -7,12 +7,19 @@ import com.abhi.leetcode_analyzer.dto.GraphQLRequest;
 import com.abhi.leetcode_analyzer.model.LeetcodeProfile;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import com.abhi.leetcode_analyzer.repository.LeetcodeProfileRepository;
+
+
 @Service
 public class LeetcodeService {
+	@Autowired
+	private LeetcodeProfileRepository repository;
 	private final RestClient restClient;
 	public LeetcodeService(RestClient restClient) {
 		this.restClient = restClient;
@@ -64,61 +71,65 @@ public class LeetcodeService {
 	
 	public LeetcodeProfile getProfile(String username) {
 
+	    // Step 1 : Check Database
+	    Optional<LeetcodeProfile> existingProfile =
+	            repository.findByUsername(username);
+
+	    if (existingProfile.isPresent()) {
+	        System.out.println("Profile loaded from MySQL");
+	        return existingProfile.get();
+	    }
+
 	    try {
+
+	        // Step 2 : Fetch from LeetCode
 	        String response = fetchfromLeetcode(username);
+
 	        ObjectMapper mapper = new ObjectMapper();
 	        JsonNode root = mapper.readTree(response);
-	        
-	        JsonNode matchedUser = root.path("data")
-                    .path("matchedUser");
-	        
-	        //here we handling the exception of user not found
-			if (matchedUser.isMissingNode() || matchedUser.isNull()) {
-			throw new RuntimeException("Leetcode User not found");
-			}
-	        JsonNode stats = root
-	                .path("data")
+
+	        JsonNode stats = root.path("data")
 	                .path("matchedUser")
 	                .path("submitStats")
 	                .path("acSubmissionNum");
+
 	        LeetcodeProfile profile = new LeetcodeProfile();
+
 	        profile.setUsername(username);
 
 	        profile.setTotalSolved(stats.get(0).path("count").asInt());
 	        profile.setEasySolved(stats.get(1).path("count").asInt());
 	        profile.setMediumSolved(stats.get(2).path("count").asInt());
 	        profile.setHardSolved(stats.get(3).path("count").asInt());
-	        
-	        int score = 
-	        		profile.getEasySolved()*1+
-	        		profile.getMediumSolved()*3+
-	        		profile.getHardSolved()*5;
-	        profile.setPerformanceScore(score);
-	        if(score < 200) {
-	            profile.setProfileLevel("Beginner");
-	        }
-	        else if(score < 500) {
-	            profile.setProfileLevel("Intermediate");
-	        }
-	        else if(score < 1000) {
-	            profile.setProfileLevel("Advanced");
-	        }
-	        else {
-	            profile.setProfileLevel("Expert");
-	        }
-	        JsonNode contest = root.path("data")
-                    .path("userContestRanking");
 
-	        	
-	        
-				if (!contest.isMissingNode()) {
-				 profile.setContestRating(
-				 (int) contest.path("rating").asDouble());
-				 profile.setGlobalRanking(
-				 contest.path("globalRanking").asInt());
-				}
+	        profile.setContestRating(
+	                (int) root.path("data")
+	                        .path("userContestRanking")
+	                        .path("rating")
+	                        .asDouble()
+	        );
+
+	        profile.setGlobalRanking(
+	                root.path("data")
+	                        .path("userContestRanking")
+	                        .path("globalRanking")
+	                        .asInt()
+	        );
+
+	        // Example Performance Score
+	        int score = profile.getEasySolved()
+	                + (profile.getMediumSolved() * 2)
+	                + (profile.getHardSolved() * 3);
+
+	        profile.setPerformanceScore(score);
+
+	        // Step 3 : Save into Database
+	        repository.save(profile);
+
+	        System.out.println("Profile saved into DataBase");
 
 	        return profile;
+
 	    } catch (Exception e) {
 	        throw new RuntimeException(e);
 	    }

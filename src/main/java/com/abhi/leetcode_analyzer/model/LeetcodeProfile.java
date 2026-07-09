@@ -1,113 +1,135 @@
 package com.abhi.leetcode_analyzer.model;
 
-import lombok.Data;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
-@Data
+@Entity
 public class LeetcodeProfile {
-	    private int totalSolved;
-	    private int easySolved;
-	    private int mediumSolved;
-	    private int hardSolved;
 
-	    private double acceptanceRate;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	    private int contestRating;
-	    private int globalRanking;
+    private String username;
 
-	    private int performanceScore;	    
-	    private String username;
-	    private String profileLevel;
-	    
-	    public String getProfileLevel() {
-			return profileLevel;
-		}
+    private int totalSolved;
+    private int easySolved;
+    private int mediumSolved;
+    private int hardSolved;
 
-		public void setProfileLevel(String profileLevel) {
-			this.profileLevel = profileLevel;
-		}
-	    
-	    public int getPerformanceScore() {
-	        return performanceScore;
-	    }
+    private double acceptanceRate;
 
-	    public void setPerformanceScore(int performanceScore) {
-	        this.performanceScore = performanceScore;
-	    }
-	    public void setUsername(String username) {
-	    	this.username = username;
-	    }
-	    public String getUsername() {
-	    	return username;
-	    }
-	    public int getTotalSolved() {
-	        return totalSolved;
-	    }
+    private int contestRating;
+    private int globalRanking;
 
-	    public void setTotalSolved(int totalSolved) {
-	        this.totalSolved = totalSolved;
-	    }
+    private int followers;
+    private int following;
+    private String profileLevel;
+    private int performanceScore;
 
-	    public int getEasySolved() {
-	        return easySolved;
-	    }
+    public Long getId() {
+        return id;
+    }
 
-	    public void setEasySolved(int easySolved) {
-	        this.easySolved = easySolved;
-	    }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	    public int getMediumSolved() {
-	        return mediumSolved;
-	    }
+    public String getUsername() {
+        return username;
+    }
 
-	    public void setMediumSolved(int mediumSolved) {
-	        this.mediumSolved = mediumSolved;
-	    }
+    public void setUsername(String username) {
+        this.username = username;
+    }
+    
+    public String getProfileLevel() {
+        return profileLevel;
+    }
 
-	    public int getHardSolved() {
-	        return hardSolved;
-	    }
+    public void setProfileLevel(String profileLevel) {
+        this.profileLevel = profileLevel;
+    }
 
-	    public void setHardSolved(int hardSolved) {
-	        this.hardSolved = hardSolved;
-	    }
+    public int getTotalSolved() {
+        return totalSolved;
+    }
 
-	    public double getAcceptanceRate() {
-	        return acceptanceRate;
-	    }
+    public void setTotalSolved(int totalSolved) {
+        this.totalSolved = totalSolved;
+    }
 
-	    public void setAcceptanceRate(double acceptanceRate) {
-	        this.acceptanceRate = acceptanceRate;
-	    }
+    public int getEasySolved() {
+        return easySolved;
+    }
 
-	    public int getContestRating() {
-	        return contestRating;
-	    }
+    public void setEasySolved(int easySolved) {
+        this.easySolved = easySolved;
+    }
 
-	    public void setContestRating(int contestRating) {
-	        this.contestRating = contestRating;
-	    }
+    public int getMediumSolved() {
+        return mediumSolved;
+    }
 
-	    public int getGlobalRanking() {
-	        return globalRanking;
-	    }
+    public void setMediumSolved(int mediumSolved) {
+        this.mediumSolved = mediumSolved;
+    }
 
-	    public void setGlobalRanking(int globalRanking) {
-	        this.globalRanking = globalRanking;
-	    }
+    public int getHardSolved() {
+        return hardSolved;
+    }
 
-//	    public int getFollowers() {
-//	        return followers;
-//	    }
-//
-//	    public void setFollowers(int followers) {
-//	        this.followers = followers;
-//	    }
-//
-//	    public int getFollowing() {
-//	        return following;
-//	    }
-//
-//	    public void setFollowing(int following) {
-//	        this.following = following;
-//	    }
-	}
+    public void setHardSolved(int hardSolved) {
+        this.hardSolved = hardSolved;
+    }
+
+    public double getAcceptanceRate() {
+        return acceptanceRate;
+    }
+
+    public void setAcceptanceRate(double acceptanceRate) {
+        this.acceptanceRate = acceptanceRate;
+    }
+
+    public int getContestRating() {
+        return contestRating;
+    }
+
+    public void setContestRating(int contestRating) {
+        this.contestRating = contestRating;
+    }
+
+    public int getGlobalRanking() {
+        return globalRanking;
+    }
+
+    public void setGlobalRanking(int globalRanking) {
+        this.globalRanking = globalRanking;
+    }
+
+    public int getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(int followers) {
+        this.followers = followers;
+    }
+
+    public int getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(int following) {
+        this.following = following;
+    }
+
+    public int getPerformanceScore() {
+        return performanceScore;
+    }
+
+    public void setPerformanceScore(int performanceScore) {
+        this.performanceScore = performanceScore;
+    }
+}
